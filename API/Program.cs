@@ -15,8 +15,8 @@ namespace API
     {
         public static async Task Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
 
+            var host = CreateHostBuilder(args).Build();
 
             // createing datebase
             using var scope = host.Services.CreateScope();
