@@ -1,17 +1,24 @@
-import React from "react";
+import { observer } from "mobx-react-lite";
+import React, { useState } from "react";
 import { Button, Item, Label, Segment } from "semantic-ui-react";
-import { Activity } from "../../../App/models/activity";
+import { useStore } from "../../../App/store/store";
 
-interface Props {
-  activities: Activity[];
-  handleSelectedActivity: (id: string) => void;
-  deleteActivity: (id: string) => void;
-}
-const ActivityList = ({ activities, handleSelectedActivity ,deleteActivity}: Props) => {
+const ActivityList = () => {
+  const [target, setTarget] = useState("");
+  const { activityStore } = useStore();
+  const { deleteActivity, loading,activityByDate } = activityStore;
+  const handleWhichActivityDeleted = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    id: string
+  ) => {
+    setTarget(e.currentTarget.name);
+    deleteActivity(id);
+  };
+
   return (
     <Segment>
       <Item.Group divided>
-        {activities.map((activity) => (
+        {activityByDate.map((activity) => (
           <Item key={activity.id}>
             <Item.Content>
               <Item.Header as="a">{activity.title}</Item.Header>
@@ -24,16 +31,18 @@ const ActivityList = ({ activities, handleSelectedActivity ,deleteActivity}: Pro
               </Item.Description>
               <Item.Extra>
                 <Button
-                  onClick={handleSelectedActivity.bind(null, activity.id)}
+                  onClick={() => activityStore.selectedActivity(activity.id)}
                   floated="right"
                   content="View"
                   color="blue"
                 />
                 <Button
-                  onClick={deleteActivity.bind(null, activity.id)}
+                  name={activity.id}
+                  onClick={(e) => handleWhichActivityDeleted(e, activity.id)}
                   floated="right"
                   content="delete"
                   color="red"
+                  loading={loading && target === activity.id}
                 />
                 <Label basic content={activity.category} />
               </Item.Extra>
@@ -45,4 +54,4 @@ const ActivityList = ({ activities, handleSelectedActivity ,deleteActivity}: Pro
   );
 };
 
-export default ActivityList;
+export default observer(ActivityList);

@@ -1,54 +1,25 @@
-import React from "react";
-import { Grid, List } from "semantic-ui-react";
-import { Activity } from "../../../App/models/activity";
+import { observer } from "mobx-react-lite";
+import { Grid } from "semantic-ui-react";
+import { useStore } from "../../../App/store/store";
 import ActivityDetails from "../details/ActivityDetails";
 import { ActivityForm } from "../form/ActivityForm";
 import ActivityList from "./ActivityList";
 
-interface Props {
-  activities: Activity[];
-  selectedActivity: Activity | undefined;
-  handleSelectedActivity: (id: string) => void;
-  handleCancelSelectedActivity: () => void;
-  editMode: boolean;
-  handleFormOpen: (id?: string) => void;
-  handleFormClose: () => void;
-  createOrEditActivity: (activity: Activity) => void;
-  deleteActivity: (id: string) => void;
-}
 
-export const ActivityDashboard = ({
-  activities,
-  selectedActivity,
-  handleSelectedActivity,
-  handleCancelSelectedActivity,
-  handleFormOpen,
-  editMode,
-  handleFormClose,
-  createOrEditActivity,
-  deleteActivity
-}: Props) => {
+
+export default observer(function ActivityDashboard() {
+  const { activityStore } = useStore();
+
+  const { selectActivity, editMode } = activityStore;
   return (
     <Grid>
       <Grid.Column width={10}>
-        <ActivityList
-          activities={activities}
-          handleSelectedActivity={handleSelectedActivity}
-          deleteActivity={deleteActivity}
-        />
+        <ActivityList />
       </Grid.Column>
       <Grid.Column width={6}>
-        {selectedActivity &&!editMode&& (
-          <ActivityDetails
-            activity={selectedActivity}
-            handleCancelSelectedActivity={handleCancelSelectedActivity}
-            handleFormOpen={handleFormOpen}
-          />
-        )}
-        {editMode && (
-          <ActivityForm handleFormClose={handleFormClose} activity={selectedActivity} createOrEditActivity={createOrEditActivity} />
-        )}
+        {selectActivity && !editMode && <ActivityDetails />}
+        {editMode && <ActivityForm />}
       </Grid.Column>
     </Grid>
   );
-};
+});
