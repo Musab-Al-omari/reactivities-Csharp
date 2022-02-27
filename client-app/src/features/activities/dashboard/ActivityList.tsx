@@ -1,12 +1,13 @@
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button, Item, Label, Segment } from "semantic-ui-react";
 import { useStore } from "../../../App/store/store";
 
 const ActivityList = () => {
   const [target, setTarget] = useState("");
   const { activityStore } = useStore();
-  const { deleteActivity, loading,activityByDate } = activityStore;
+  const { deleteActivity, loading, activityByDate } = activityStore;
   const handleWhichActivityDeleted = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     id: string
@@ -31,7 +32,9 @@ const ActivityList = () => {
               </Item.Description>
               <Item.Extra>
                 <Button
-                  onClick={() => activityStore.selectedActivity(activity.id)}
+                  as={Link}
+                  to={`/activities/${activity.id}`}
+                  // onClick={() => activityStore.selectedActivity(activity.id)}
                   floated="right"
                   content="View"
                   color="blue"

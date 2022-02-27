@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
 import { v4 as uuid } from "uuid";
+
 export default class ActivityStore {
   selectActivity: Activity | undefined;
   activityRegistry = new Map<string, Activity>();
@@ -24,13 +25,34 @@ export default class ActivityStore {
       const activities = await agent.Activities.list();
 
       activities.forEach((activity) => {
-        activity.date = activity.date.split("T")[0];
-        this.activityRegistry.set(activity.id, activity);
+        this.setActivity(activity);
       });
       this.setLoadingInitial(false);
     } catch (error) {
       console.log(error);
       this.setLoadingInitial(false);
+    }
+  };
+
+  private setActivity = (activity: Activity) => {
+    activity.date = activity.date.split("T")[0];
+    this.activityRegistry.set(activity.id, activity);
+  };
+
+  loadActivity = async (id: string) => {
+    let activity = this.activityRegistry.get(id);
+    if (activity) {
+      this.selectActivity = activity;
+    } else {
+      this.setLoadingInitial(true);
+      try {
+        activity = await agent.Activities.details(id);
+        this.setActivity(activity);
+        this.setLoadingInitial(false);
+      } catch (error) {
+        console.log(error);
+        this.setLoadingInitial(false);
+      }
     }
   };
 
@@ -41,25 +63,12 @@ export default class ActivityStore {
     this.selectActivity = this.activityRegistry.get(id);
   };
 
-  cancelSelectedActivity = () => {
-    this.selectActivity = undefined;
-  };
-  openForm = (id?: string) => {
-    id ? this.selectedActivity(id) : this.cancelSelectedActivity();
-    this.editMode = true;
-  };
-
-  closeForm = () => {
-    this.editMode = false;
-  };
-
   createActivity = async (activity: Activity) => {
     this.setLoading(true);
     activity.id = uuid();
     try {
       await agent.Activities.create(activity);
       this.activityRegistry.set(activity.id, activity);
-      this.closeForm();
       this.setLoading(false);
     } catch (error) {
       console.log(error);
@@ -78,7 +87,6 @@ export default class ActivityStore {
       this.activityRegistry.set(activity.id, activity);
       this.selectedActivity(activity.id);
       this.setLoading(false);
-      this.closeForm();
     } catch (error) {
       console.log(error);
       this.setLoading(false);
@@ -90,9 +98,6 @@ export default class ActivityStore {
     try {
       await agent.Activities.delete(id);
       this.activityRegistry.delete(id);
-      if (this.selectActivity?.id === id) {
-        this.cancelSelectedActivity();
-      }
 
       this.setLoading(false);
     } catch (error) {

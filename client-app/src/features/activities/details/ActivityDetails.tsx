@@ -4,13 +4,16 @@ import LoadingComp from "../../../App/layout/LoadingComp";
 import { useStore } from "../../../App/store/store";
 
 function ActivityDetails() {
-
-  const{activityStore}=useStore();
-  const{selectActivity,openForm,cancelSelectedActivity}=activityStore;
-  if (!selectActivity)return <LoadingComp/>;
+  const { activityStore } = useStore();
+  const { selectActivity } = activityStore;
+  if (!selectActivity) return <LoadingComp />;
   return (
     <Card fluid>
-      <Image src={`/assets/categoryImages/${selectActivity.category}.jpg`} wrapped ui={false} />
+      <Image
+        src={`/assets/categoryImages/${selectActivity.category}.jpg`}
+        wrapped
+        ui={false}
+      />
       <Card.Content>
         <Card.Header>{selectActivity.title}</Card.Header>
         <Card.Meta>
@@ -20,16 +23,11 @@ function ActivityDetails() {
       </Card.Content>
       <Card.Content extra>
         <Button.Group widths={2}>
-          <Button onClick={openForm.bind(null,selectActivity.id)} basic color="blue" content="Edit" />
-          <Button
-            onClick={cancelSelectedActivity}
-            basic
-            color="grey"
-            content="Cancel"
-          />
+          <Button basic color="blue" content="Edit" />
+          <Button basic color="grey" content="Cancel" />
         </Button.Group>
       </Card.Content>
-    </Card>  
+    </Card>
   );
 }
 

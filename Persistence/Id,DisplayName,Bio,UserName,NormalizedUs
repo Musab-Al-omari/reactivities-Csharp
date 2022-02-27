@@ -1,0 +1,2 @@
+Id,DisplayName,Bio,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount
+e0d0b107-5226-4b85-b667-fc653961b1a1,musab,sdsa,smara,SMARA,musab@test.com,MUSAB@TEST.COM,0,AQAAAAEAACcQAAAAEFxBjVeq1eIhH5/RRi2qqIBcq5VVXQQ4tP9Mn8oaYLdU7Nu1itFPrPM7NLAm6PYe4g==,OOSUHND7MW6OCWVEGJFHFQXPATRNY7LD,6bdfd98b-688d-4e87-9ddb-09750e6924e0,NULL,0,0,NULL,1,0

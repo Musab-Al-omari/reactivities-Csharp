@@ -1,11 +1,15 @@
 import ReactDOM from "react-dom";
 import App from "./App/layout/App";
 import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter } from "react-router-dom";
+
 import "./App/layout/styles.css";
 import { store, StoreContext } from "./App/store/store";
 ReactDOM.render(
   <StoreContext.Provider value={store}>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </StoreContext.Provider>,
   document.getElementById("root")
 );
